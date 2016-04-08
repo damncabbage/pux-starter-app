@@ -1,8 +1,10 @@
 module App.Layout where
 
+import App.Types (AppEffects)
 import App.Counter as Counter
 import App.Routes (Route(Home, NotFound))
-import Prelude (($))
+import Prelude (($), map)
+import Pux (EffModel, noEffects)
 import Pux.Html (Html, (#), bind, forwardTo, div, h1, p, text)
 
 data Action
@@ -18,9 +20,15 @@ init =
   { route: NotFound
   , count: Counter.init }
 
-update :: Action -> State -> State
-update (PageView route) state = state { route = route }
-update (Child action) state = state { count = Counter.update action state.count }
+update :: forall eff. Action -> State -> EffModel State Action (AppEffects eff)
+update (PageView route) state =
+  noEffects $ state { route = route }
+update (Child action) state =
+  { state:   state { count = counter.state }
+  , effects: map (map Child) counter.effects
+  }
+  where
+    counter = Counter.update action state.count
 
 view :: State -> Html Action
 view state =

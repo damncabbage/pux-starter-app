@@ -13,6 +13,8 @@
     "postinstall": "./node_modules/.bin/bower cache clean && ./node_modules/.bin/bower install",
     "clean": "rimraf dist && rimraf output",
     "build": "npm run clean && set NODE_ENV=production && ./node_modules/.bin/webpack --config ./webpack.production.config.js --progress --profile --colors",
+    "build:ide": "pulp build --src-path src/purs --no-psa --json-errors",
+    "build:watch": "pulp -w build --src-path src/purs",
     "serve": "./node_modules/.bin/webpack-dev-server --hot --config webpack.config.js --inline --progress --profile --colors --display-error-details --display-cached --content-base src/",
     "serve:watch": "npm run serve --  --watch",
     "serve:prod": "http-server dist --cors -p 3000",
